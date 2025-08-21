@@ -2,16 +2,14 @@ import { Outlet } from 'react-router';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
-// interface IProps {
-//   children: React.ReactNode;
-// }
-
 export default function PublicLayout() {
   return (
-    <div>
+    <>
       <Navbar />
-      <Outlet />
+      <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
+        <Outlet />
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }
