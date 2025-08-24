@@ -50,6 +50,14 @@ const Navbar = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
+                  href="/features"
+                  className={navigationMenuTriggerStyle()}
+                >
+                  Features
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
                   href="/about"
                   className={navigationMenuTriggerStyle()}
                 >
@@ -58,18 +66,10 @@ const Navbar = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="/how-it-works"
+                  href="/faq"
                   className={navigationMenuTriggerStyle()}
                 >
-                  How it works
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/pricing"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Pricing
+                  Faq
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -83,8 +83,9 @@ const Navbar = () => {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
-            <Button variant="outline">Sign in</Button>
-            <Button>Start for free</Button>
+            <Link to="/signup">
+              <Button variant="outline">Sign in</Button>
+            </Link>
           </div>
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
@@ -108,7 +109,7 @@ const Navbar = () => {
                         fill="#297AFF"
                       ></path>
                     </svg>
-                    <span className="text-lg font-semibold tracking-tighter">
+                    <span className="text-2xl font-semibold tracking-tighter">
                       Ridesphere
                     </span>
                   </Link>
@@ -119,11 +120,14 @@ const Navbar = () => {
                   <Link to="/" className="font-medium">
                     Home
                   </Link>
+                  <Link to="/features" className="font-medium">
+                    Features
+                  </Link>
                   <Link to="/about" className="font-medium">
                     About
                   </Link>
-                  <Link to="/how-it-works" className="font-medium">
-                    How it works
+                  <Link to="/faq" className="font-medium">
+                    Faq
                   </Link>
                   <Link to="/pricing" className="font-medium">
                     Pricing
@@ -134,7 +138,6 @@ const Navbar = () => {
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   <Button variant="outline">Sign in</Button>
-                  <Button>Start for free</Button>
                 </div>
               </div>
             </SheetContent>
