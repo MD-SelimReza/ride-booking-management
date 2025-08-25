@@ -1,3 +1,6 @@
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,15 +13,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useRegisterMutation } from '@/services/authApi';
+
+// ✅ Validation schema
+const signupSchema = z.object({
+  name: z.string().min(2, 'Full name is required'),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  role: z.enum(['RIDER', 'DRIVER'], {
+    message: 'Please select a role',
+  }),
+});
+
+type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
+  const navigate = useNavigate();
+  const [registerUser, { isLoading }] = useRegisterMutation();
+
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { name: '', email: '', password: '', role: 'RIDER' },
+  });
+
+  const onSubmit = async (data: SignupFormValues) => {
+    console.log('Submitting signup form with data:', data);
+    try {
+      const res = await registerUser(data).unwrap();
+      console.log('✅ Signup successful:', res);
+      navigate('/signin');
+    } catch (err) {
+      console.error('❌ Signup failed:', err);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 bg-muted">
       <div className="w-full max-w-md">
         {/* Logo + Heading */}
         <div className="flex flex-col items-center space-y-4 text-center mb-8">
-          {/* Replace with your logo */}
           <svg
             width="45"
             height="35"
@@ -40,17 +74,37 @@ export default function SignupPage() {
         {/* Card Form */}
         <Card className="min-w-sm border-muted bg-background">
           <CardContent className="space-y-6 p-6">
-            <div className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {/* Full Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" type="text" placeholder="Enter your name" />
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Enter your name"
+                  {...form.register('name')}
+                />
+                {form.formState.errors.name && (
+                  <p className="text-red-500 text-sm">
+                    {form.formState.errors.name.message}
+                  </p>
+                )}
               </div>
 
               {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="Enter your email" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  {...form.register('email')}
+                />
+                {form.formState.errors.email && (
+                  <p className="text-red-500 text-sm">
+                    {form.formState.errors.email.message}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -60,33 +114,51 @@ export default function SignupPage() {
                   id="password"
                   type="password"
                   placeholder="Create a password"
+                  {...form.register('password')}
                 />
+                {form.formState.errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {form.formState.errors.password.message}
+                  </p>
+                )}
               </div>
 
               {/* Role Selection */}
               <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
-                <Select>
-                  <SelectTrigger id="role" className="w-full">
-                    <SelectValue placeholder="Select your role" />
+                <Select
+                  onValueChange={(value) =>
+                    form.setValue('role', value as 'RIDER' | 'DRIVER')
+                  }
+                  defaultValue={form.getValues('role')}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="rider">Rider</SelectItem>
-                    <SelectItem value="driver">Driver</SelectItem>
+                    <SelectItem value="RIDER">Rider</SelectItem>
+                    <SelectItem value="DRIVER">Driver</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-            </div>
 
-            {/* Sign Up Button */}
-            <Button className="w-full" type="submit">
-              Sign up
-            </Button>
+                {form.formState.errors.role && (
+                  <p className="text-red-500 text-sm">
+                    {form.formState.errors.role.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Sign Up Button */}
+              <Button className="w-full" type="submit" disabled={isLoading}>
+                {isLoading ? 'Signing up...' : 'Sign up'}
+              </Button>
+            </form>
 
             {/* Google Signup */}
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
+              type="button"
             >
               <FcGoogle className="h-5 w-5" />
               Sign up with Google

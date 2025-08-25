@@ -53,7 +53,7 @@ const values = [
 
 const AboutPage = () => {
   return (
-    <section className="py-20 container w-full mx-auto px-5">
+    <section className="py-20 max-w-[1440px] w-full mx-auto px-5">
       {/* Hero Section with RideSphere-themed Background */}
       <div
         className="relative h-[500px] flex items-center justify-center text-center text-white"

@@ -1,18 +1,52 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router';
+import { Eye, EyeOff } from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
+import { useLoginMutation } from '@/services/authApi';
 
-export default function SignupPage() {
+type LoginFormInputs = {
+  email: string;
+  password: string;
+};
+
+export default function LoginPage() {
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormInputs>();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onSubmit = async (data: LoginFormInputs) => {
+    console.log('Submitting login form with data:', data);
+    try {
+      const res = await login(data).unwrap();
+      console.log('✅ Login success:', res);
+
+      // example: store token in localStorage
+      if (res?.token) {
+        localStorage.setItem('accessToken', res.token);
+      }
+
+      navigate('/'); // redirect after login
+    } catch (err) {
+      console.error('❌ Login failed:', err);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center px-4 bg-muted">
       <div className="w-full max-w-md">
         {/* Header Section */}
         <div className="flex flex-col items-center space-y-4 text-center mb-8">
-          {/* Replace with your logo */}
           <svg
             width="45"
             height="35"
@@ -35,21 +69,44 @@ export default function SignupPage() {
         {/* Card Form */}
         <Card className="min-w-sm border-muted bg-background">
           <CardContent className="space-y-6 p-6">
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="Enter your email" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  {...register('email', { required: 'Email is required' })}
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
               </div>
 
               {/* Password */}
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password"
+                  {...register('password', {
+                    required: 'Password is required',
+                  })}
                 />
+                <button
+                  type="button"
+                  className="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+                {errors.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               {/* Remember me + Forgot Password */}
@@ -70,14 +127,14 @@ export default function SignupPage() {
                   Forgot Password?
                 </Link>
               </div>
-            </div>
 
-            {/* Sign In Button */}
-            <Button className="w-full" type="submit">
-              Sign in
-            </Button>
+              {/* Sign In Button */}
+              <Button className="w-full" type="submit" disabled={isLoading}>
+                {isLoading ? 'Signing in...' : 'Sign in'}
+              </Button>
+            </form>
 
-            {/* Google Signup */}
+            {/* Google Login */}
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
