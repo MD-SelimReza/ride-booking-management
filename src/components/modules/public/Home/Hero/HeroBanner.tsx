@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router';
 
 export default function HeroBanner() {
   return (
@@ -25,10 +26,10 @@ export default function HeroBanner() {
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button size="lg" className="px-8">
-              Sign Up as Rider
+              <Link to="/signup">Sign Up as Rider</Link>
             </Button>
             <Button size="lg" variant="outline" className="px-8">
-              Become a Driver
+              <Link to="/signup">Become a Driver</Link>
             </Button>
           </div>
         </motion.div>

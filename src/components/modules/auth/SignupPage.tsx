@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/select';
 import { Link, useNavigate } from 'react-router';
 import { useRegisterMutation } from '@/services/authApi';
+import { toast } from 'sonner';
 
 // ✅ Validation schema
 const signupSchema = z.object({
@@ -41,10 +42,11 @@ export default function SignupPage() {
     console.log('Submitting signup form with data:', data);
     try {
       const res = await registerUser(data).unwrap();
-      console.log('✅ Signup successful:', res);
+      console.log(res);
+      toast.success(res.message || 'Signup successful!');
       navigate('/signin');
     } catch (err) {
-      console.error('❌ Signup failed:', err);
+      console.log(err);
     }
   };
 
@@ -53,18 +55,20 @@ export default function SignupPage() {
       <div className="w-full max-w-md">
         {/* Logo + Heading */}
         <div className="flex flex-col items-center space-y-4 text-center mb-8">
-          <svg
-            width="45"
-            height="35"
-            viewBox="0 0 50 40"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M43 31L31 40H5L7 35L12 31H29L32 35L40 11L45 7H50L43 31ZM43 5L38 9H21L18 5L10 29L5 33H0L7 9L19 0H45L43 5ZM24 13H35L29 31L26 27H15L21 9L24 13Z"
-              fill="#297AFF"
-            ></path>
-          </svg>
+          <Link to="/">
+            <svg
+              width="45"
+              height="35"
+              viewBox="0 0 50 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M43 31L31 40H5L7 35L12 31H29L32 35L40 11L45 7H50L43 31ZM43 5L38 9H21L18 5L10 29L5 33H0L7 9L19 0H45L43 5ZM24 13H35L29 31L26 27H15L21 9L24 13Z"
+                fill="#297AFF"
+              ></path>
+            </svg>
+          </Link>
           <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-muted-foreground text-sm">
             Please fill in the details to get started.
@@ -132,7 +136,7 @@ export default function SignupPage() {
                   }
                   defaultValue={form.getValues('role')}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
                   <SelectContent>

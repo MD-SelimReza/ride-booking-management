@@ -31,12 +31,11 @@ export default function LoginPage() {
       const res = await login(data).unwrap();
       console.log('✅ Login success:', res);
 
-      // example: store token in localStorage
       if (res?.token) {
         localStorage.setItem('accessToken', res.token);
       }
 
-      navigate('/'); // redirect after login
+      navigate('/');
     } catch (err) {
       console.error('❌ Login failed:', err);
     }
@@ -47,18 +46,20 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Header Section */}
         <div className="flex flex-col items-center space-y-4 text-center mb-8">
-          <svg
-            width="45"
-            height="35"
-            viewBox="0 0 50 40"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M43 31L31 40H5L7 35L12 31H29L32 35L40 11L45 7H50L43 31ZM43 5L38 9H21L18 5L10 29L5 33H0L7 9L19 0H45L43 5ZM24 13H35L29 31L26 27H15L21 9L24 13Z"
-              fill="#297AFF"
-            ></path>
-          </svg>
+          <Link to="/">
+            <svg
+              width="45"
+              height="35"
+              viewBox="0 0 50 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M43 31L31 40H5L7 35L12 31H29L32 35L40 11L45 7H50L43 31ZM43 5L38 9H21L18 5L10 29L5 33H0L7 9L19 0H45L43 5ZM24 13H35L29 31L26 27H15L21 9L24 13Z"
+                fill="#297AFF"
+              ></path>
+            </svg>
+          </Link>
           <h1 className="text-2xl font-bold">Welcome Back 👋</h1>
           <p className="text-muted-foreground text-sm max-w-sm">
             Sign in to access your account, book rides faster, and enjoy a

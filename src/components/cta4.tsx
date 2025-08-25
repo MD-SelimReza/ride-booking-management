@@ -1,5 +1,6 @@
 import { ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router';
 
 interface Cta4Props {
   title?: string;
@@ -21,7 +22,7 @@ const Cta4 = ({
   title = 'Ready to Ride or Drive?',
   description = 'Join thousands of happy riders and drivers who trust our platform for safe, affordable, and reliable transportation every day.',
   buttonText = 'Get Started Today',
-  buttonUrl = 'https://yourapp.com/signup',
+  buttonUrl = '/signup',
   items = defaultItems,
 }: Cta4Props) => {
   return (
@@ -34,9 +35,9 @@ const Cta4 = ({
                 <h4 className="mb-1 text-2xl font-bold md:text-3xl">{title}</h4>
                 <p className="text-muted-foreground">{description}</p>
                 <Button className="mt-6" asChild>
-                  <a href={buttonUrl} target="_blank">
+                  <Link to={buttonUrl}>
                     {buttonText} <ArrowRight className="size-4" />
-                  </a>
+                  </Link>
                 </Button>
               </div>
               <div className="md:w-1/3">

@@ -15,6 +15,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Link } from 'react-router';
+import { ModeToggle } from './ModeToggler';
 
 const Navbar = () => {
   return (
@@ -83,9 +84,10 @@ const Navbar = () => {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
-            <Link to="/signup">
-              <Button variant="outline">Sign in</Button>
-            </Link>
+            <ModeToggle />
+            <Button variant="outline">
+              <Link to="/signup">Sign in</Link>
+            </Button>
           </div>
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
@@ -137,7 +139,10 @@ const Navbar = () => {
                   </Link>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
-                  <Button variant="outline">Sign in</Button>
+                  <ModeToggle />
+                  <Button variant="outline">
+                    <Link to="/signin">Sign in</Link>
+                  </Button>
                 </div>
               </div>
             </SheetContent>
